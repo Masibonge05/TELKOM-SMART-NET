@@ -1,0 +1,69 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Telkom Official Brand Colors */
+  --telkom-cyan: #00C1DE;
+  --telkom-blue: #0077C8;
+  --telkom-dark-blue: #003E7E;
+  --telkom-navy: #001E50;
+  --telkom-light-cyan: #5CE1E6;
+  --telkom-teal: #00838F;
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: var(--telkom-cyan);
+  
+  /* UI Colors */
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #0f1419;
+  --bg-card: rgba(0, 193, 222, 0.03);
+  --border-color: rgba(0, 193, 222, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --shadow: 0 4px 6px -1px rgba(0, 193, 222, 0.1);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--telkom-cyan), var(--telkom-blue));
+  --gradient-dark: linear-gradient(180deg, #0a0e1a 0%, #0f1419 100%);
+  --gradient-card: linear-gradient(135deg, rgba(0, 193, 222, 0.05), rgba(0, 119, 200, 0.05));
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--gradient-dark);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--telkom-cyan);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--telkom-light-cyan);
+}
