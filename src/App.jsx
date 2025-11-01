@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 import './App.css';
 
-// Telkom Brand Colors hj
+// Telkom Brand Colors
 const TELKOM_COLORS = {
   primary: '#00C1DE',
   secondary: '#0077C8',
