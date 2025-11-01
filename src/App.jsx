@@ -6,9 +6,10 @@ import {
   AlertCircle, CheckCircle, Wifi, Battery, Sun, Clock, Server,
   BarChart3, PieChart, LineChart as LineChartIcon, Network,
   Layers, Heart, GraduationCap, Car, Film, ArrowRight, AlertTriangle,
-  MapPin, Tool, FileText, Search, Filter, ChevronRight, ExternalLink,
+  MapPin, FileText, Search, Filter, ChevronRight, ExternalLink,
   Settings, Wrench, RefreshCw, XCircle
 } from 'lucide-react';
+
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPie, Pie,
   Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -498,7 +499,7 @@ function App() {
       optimal: { color: TELKOM_COLORS.success, icon: CheckCircle, label: 'Optimal' },
       warning: { color: TELKOM_COLORS.warning, icon: AlertCircle, label: 'Warning' },
       critical: { color: TELKOM_COLORS.danger, icon: XCircle, label: 'Critical' },
-      maintenance: { color: TELKOM_COLORS.secondary, icon: Tool, label: 'Maintenance' }
+      maintenance: { color: TELKOM_COLORS.secondary, icon: Settings, label: 'Maintenance' }
     };
     const config = statusConfig[site.status];
     const StatusIcon = config.icon;
