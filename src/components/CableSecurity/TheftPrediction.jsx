@@ -1,574 +1,551 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, MapPin, Camera, Lock, Activity, TrendingDown, CheckCircle, Wrench } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import { Shield, AlertTriangle, MapPin, Activity, Camera, Lock } from 'lucide-react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import './TheftPrediction.css';
 
 const TELKOM_COLORS = {
   primary: '#00C1DE',
   success: '#10b981',
   warning: '#f59e0b',
-  danger: '#ef4444',
-  secondary: '#0077C8'
+  danger: '#ef4444'
 };
 
 const TheftPrediction = () => {
   const [selectedSite, setSelectedSite] = useState(null);
-  const [liveIncidents, setLiveIncidents] = useState(3);
+  const [selectedIncident, setSelectedIncident] = useState(null);
+  const [viewMode, setViewMode] = useState('heatmap'); // 'heatmap' or 'incidents'
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveIncidents(prev => Math.max(0, prev + (Math.random() > 0.95 ? 1 : 0) - (Math.random() > 0.9 ? 1 : 0)));
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const securityMetrics = {
-    highRiskSites: 45,
-    incidentsThisMonth: 12,
-    incidentsPrevented: 28,
-    savingsFromPrevention: 'R8.4M',
-    activeSurveillance: 380,
-    responseTime: '8 min'
-  };
-
+  // High-risk sites with theft probability
   const highRiskSites = [
     {
-      id: 'GT-045',
+      id: 'RISK-001',
       name: 'Soweto Junction',
-      province: 'Gauteng',
-      riskScore: 94,
-      lat: -26.2472,
-      lng: 27.8546,
-      lastIncident: '3 days ago',
-      incidentCount: 8,
-      nearbyScrapDealers: 3,
-      crimeRate: 'Very High',
+      lat: -26.2678,
+      lng: 27.8585,
+      risk: 94,
+      riskLevel: 'critical',
+      cableLength: '2.3 km',
+      estimatedValue: 'R450K',
+      lastIncident: '12 days ago',
+      scrapDealersNearby: 8,
+      crimeStat: 'High',
       securityLevel: 'Enhanced',
-      cameraStatus: 'Active',
-      recommendedAction: 'Deploy mobile patrol unit + Install motion sensors',
-      estimatedLoss: 'R450K',
-      vulnerabilities: ['Limited lighting', 'Proximity to informal settlement', 'Previous incidents']
+      aiRecommendation: 'Install motion sensors, increase patrol frequency'
     },
     {
-      id: 'KZN-023',
-      name: 'Umlazi Township',
-      province: 'KwaZulu-Natal',
-      riskScore: 89,
-      lat: -29.9687,
-      lng: 30.8796,
-      lastIncident: '1 week ago',
-      incidentCount: 6,
-      nearbyScrapDealers: 2,
-      crimeRate: 'High',
+      id: 'RISK-002',
+      name: 'Alexandra Township',
+      lat: -26.1028,
+      lng: 28.0989,
+      risk: 89,
+      riskLevel: 'critical',
+      cableLength: '1.8 km',
+      estimatedValue: 'R380K',
+      lastIncident: '8 days ago',
+      scrapDealersNearby: 6,
+      crimeStat: 'High',
       securityLevel: 'Standard',
-      cameraStatus: 'Active',
-      recommendedAction: 'Upgrade to AI-powered cameras + Community engagement',
-      estimatedLoss: 'R380K',
-      vulnerabilities: ['High foot traffic', 'Limited fence security', 'Gang activity nearby']
+      aiRecommendation: 'Deploy fiber sensors, add CCTV coverage'
     },
     {
-      id: 'WC-034',
-      name: 'Khayelitsha Site B',
-      province: 'Western Cape',
-      riskScore: 86,
-      lat: -34.0283,
-      lng: 18.6648,
-      lastIncident: '5 days ago',
-      incidentCount: 7,
-      nearbyScrapDealers: 4,
-      crimeRate: 'Very High',
+      id: 'RISK-003',
+      name: 'Cape Flats Region',
+      lat: -33.9794,
+      lng: 18.6136,
+      risk: 87,
+      riskLevel: 'critical',
+      cableLength: '3.1 km',
+      estimatedValue: 'R620K',
+      lastIncident: '15 days ago',
+      scrapDealersNearby: 12,
+      crimeStat: 'Very High',
       securityLevel: 'Enhanced',
-      cameraStatus: 'Maintenance',
-      recommendedAction: 'URGENT: Repair cameras + 24/7 security guard',
-      estimatedLoss: 'R520K',
-      vulnerabilities: ['Camera malfunction', 'Multiple scrap dealers nearby', 'Previous copper theft']
+      aiRecommendation: 'Underground cable replacement recommended'
     },
     {
-      id: 'EC-012',
-      name: 'Mdantsane Highway',
-      province: 'Eastern Cape',
-      riskScore: 81,
-      lat: -32.9833,
-      lng: 27.7167,
-      lastIncident: '2 weeks ago',
-      incidentCount: 4,
-      nearbyScrapDealers: 1,
-      crimeRate: 'Medium',
+      id: 'RISK-004',
+      name: 'Durban South',
+      lat: -29.9167,
+      lng: 30.9833,
+      risk: 82,
+      riskLevel: 'high',
+      cableLength: '2.7 km',
+      estimatedValue: 'R540K',
+      lastIncident: '22 days ago',
+      scrapDealersNearby: 5,
+      crimeStat: 'High',
       securityLevel: 'Standard',
-      cameraStatus: 'Active',
-      recommendedAction: 'Increase patrol frequency + Install fiber sensors',
-      estimatedLoss: 'R290K',
-      vulnerabilities: ['Remote location', 'Infrequent patrols', 'Easy road access']
+      aiRecommendation: 'Install additional lighting, increase patrols'
+    },
+    {
+      id: 'RISK-005',
+      name: 'Tembisa Area',
+      lat: -25.9953,
+      lng: 28.2289,
+      risk: 78,
+      riskLevel: 'high',
+      cableLength: '1.5 km',
+      estimatedValue: 'R310K',
+      lastIncident: '28 days ago',
+      scrapDealersNearby: 4,
+      crimeStat: 'Medium',
+      securityLevel: 'Standard',
+      aiRecommendation: 'Fiber optic sensors recommended'
+    },
+    {
+      id: 'RISK-006',
+      name: 'Port Elizabeth Central',
+      lat: -33.9608,
+      lng: 25.6022,
+      risk: 75,
+      riskLevel: 'high',
+      cableLength: '2.1 km',
+      estimatedValue: 'R420K',
+      lastIncident: '35 days ago',
+      scrapDealersNearby: 7,
+      crimeStat: 'Medium',
+      securityLevel: 'Enhanced',
+      aiRecommendation: 'Continue current monitoring protocol'
+    },
+    {
+      id: 'RISK-007',
+      name: 'Bloemfontein North',
+      lat: -29.0852,
+      lng: 26.1596,
+      risk: 68,
+      riskLevel: 'medium',
+      cableLength: '1.2 km',
+      estimatedValue: 'R240K',
+      lastIncident: '45 days ago',
+      scrapDealersNearby: 3,
+      crimeStat: 'Low',
+      securityLevel: 'Standard',
+      aiRecommendation: 'Regular patrols sufficient'
+    },
+    {
+      id: 'RISK-008',
+      name: 'Polokwane Industrial',
+      lat: -23.9045,
+      lng: 29.4689,
+      risk: 62,
+      riskLevel: 'medium',
+      cableLength: '0.9 km',
+      estimatedValue: 'R180K',
+      lastIncident: '60+ days ago',
+      scrapDealersNearby: 2,
+      crimeStat: 'Low',
+      securityLevel: 'Standard',
+      aiRecommendation: 'Maintain current security measures'
     }
   ];
 
+  // Recent theft incidents
   const recentIncidents = [
     {
-      id: 'INC-2025-089',
-      site: 'GT-045',
-      siteName: 'Soweto Junction',
-      type: 'Attempted Copper Theft',
-      timestamp: '2 hours ago',
-      status: 'Prevented',
-      detectionMethod: 'AI Camera + Fiber Sensor',
-      responseTime: '6 minutes',
-      suspects: 2,
-      recoveredItems: 'None - prevented',
-      outcome: 'Success'
+      id: 'INC-2025-045',
+      lat: -26.2500,
+      lng: 27.8700,
+      date: '2 hours ago',
+      status: 'prevented',
+      type: 'Attempted theft detected',
+      response: 'Security dispatched in 4 minutes',
+      cableValue: 'R45K'
     },
     {
-      id: 'INC-2025-087',
-      site: 'KZN-023',
-      siteName: 'Umlazi Township',
-      type: 'Fiber Cable Cut',
-      timestamp: '1 day ago',
-      status: 'Resolved',
-      detectionMethod: 'Network Monitoring',
-      responseTime: '12 minutes',
-      suspects: 'Unknown',
-      recoveredItems: '15m fiber cable',
-      outcome: 'R45K loss'
+      id: 'INC-2025-044',
+      lat: -26.1200,
+      lng: 28.0800,
+      date: '8 hours ago',
+      status: 'prevented',
+      type: 'Motion sensor triggered',
+      response: 'False alarm - animal movement',
+      cableValue: 'N/A'
     },
     {
-      id: 'INC-2025-086',
-      site: 'WC-034',
-      siteName: 'Khayelitsha Site B',
-      type: 'Battery Theft Attempt',
-      timestamp: '3 days ago',
-      status: 'Prevented',
-      detectionMethod: 'Motion Sensor',
-      responseTime: '8 minutes',
-      suspects: 3,
-      recoveredItems: 'None - prevented',
-      outcome: 'Success'
+      id: 'INC-2025-043',
+      lat: -33.9900,
+      lng: 18.6200,
+      date: '1 day ago',
+      status: 'loss',
+      type: 'Cable theft - 200m',
+      response: 'Recovered 50% of cable',
+      cableValue: 'R38K loss'
+    },
+    {
+      id: 'INC-2025-042',
+      lat: -29.9300,
+      lng: 31.0000,
+      date: '3 days ago',
+      status: 'prevented',
+      type: 'Suspicious activity',
+      response: 'Security intervention successful',
+      cableValue: 'R52K prevented'
     }
   ];
 
-  const preventionTrendData = [
-    { month: 'Jan', prevented: 18, occurred: 8 },
-    { month: 'Feb', prevented: 22, occurred: 6 },
-    { month: 'Mar', prevented: 25, occurred: 5 },
-    { month: 'Apr', prevented: 28, occurred: 4 },
-    { month: 'May', prevented: 31, occurred: 3 },
-    { month: 'Jun', prevented: 28, occurred: 12 }
-  ];
+  const createRiskIcon = (risk) => {
+    let color = TELKOM_COLORS.success;
+    let label = '●';
+    
+    if (risk >= 85) {
+      color = TELKOM_COLORS.danger;
+      label = '🚨';
+    } else if (risk >= 75) {
+      color = TELKOM_COLORS.warning;
+      label = '⚠️';
+    } else {
+      color = TELKOM_COLORS.primary;
+      label = '●';
+    }
 
-  const riskFactorsData = [
-    { factor: 'Previous Incidents', weight: 35 },
-    { factor: 'Scrap Dealers Nearby', weight: 25 },
-    { factor: 'Crime Statistics', weight: 20 },
-    { factor: 'Security Level', weight: 15 },
-    { factor: 'Location Remoteness', weight: 5 }
-  ];
+    const size = 10 + (risk / 100) * 6; // Smaller size: 10-16px
+
+    return L.divIcon({
+      className: 'custom-risk-marker',
+      html: `
+        <div style="
+          background-color: ${color};
+          width: ${size}px;
+          height: ${size}px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: ${size - 4}px;
+          animation: risk-pulse 2s ease-in-out infinite;
+        ">
+          <span style="position: absolute; top: -${size + 6}px; font-size: ${size - 2}px;">${label}</span>
+        </div>
+      `,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+    });
+  };
+
+  const createIncidentIcon = (status) => {
+    const color = status === 'prevented' ? TELKOM_COLORS.success : TELKOM_COLORS.danger;
+    const emoji = status === 'prevented' ? '✅' : '❌';
+    const size = 10;
+
+    return L.divIcon({
+      className: 'custom-incident-marker',
+      html: `
+        <div style="
+          background-color: ${color};
+          width: ${size}px;
+          height: ${size}px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <span style="position: absolute; top: -${size + 8}px; font-size: ${size}px;">${emoji}</span>
+        </div>
+      `,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+    });
+  };
+
+  const getRiskColor = (risk) => {
+    if (risk >= 85) return TELKOM_COLORS.danger;
+    if (risk >= 75) return TELKOM_COLORS.warning;
+    return TELKOM_COLORS.primary;
+  };
+
+  const getRiskRadius = (risk) => {
+    return 2000 + (risk / 100) * 4000; // Smaller radius: 2-6km
+  };
+
+  const preventionMetrics = {
+    incidentsPrevented: 28,
+    totalValue: 'R1.4M',
+    responseTime: '6 min',
+    aiAccuracy: 94
+  };
 
   return (
-    <div className="theft-dashboard">
+    <div className="theft-prediction-dashboard">
       {/* Header */}
       <div className="theft-header">
         <div className="theft-title">
           <Shield size={32} style={{ color: TELKOM_COLORS.danger }} />
           <div>
-            <h2>Cable Theft & Vandalism Protection</h2>
-            <p>AI-powered threat prediction • Real-time intrusion detection • 24/7 surveillance</p>
+            <h2>Cable Security & Theft Prevention</h2>
+            <p>AI-powered theft prediction • Real-time monitoring • R1.4M in losses prevented this month</p>
           </div>
         </div>
       </div>
 
-      {/* Live Alert Banner */}
-      <div className="live-alert-banner">
-        <div className="live-indicator pulsing-red">
-          <Activity size={20} />
+      {/* Prevention Metrics */}
+      <div className="prevention-metrics-grid">
+        <div className="prevention-card" style={{ borderTopColor: TELKOM_COLORS.success }}>
+          <Shield size={24} style={{ color: TELKOM_COLORS.success }} />
+          <div className="prevention-value">{preventionMetrics.incidentsPrevented}</div>
+          <div className="prevention-label">Incidents Prevented</div>
+          <div className="prevention-subtitle">This month</div>
         </div>
-        <div className="live-alert-content">
-          <strong>🚨 LIVE MONITORING ACTIVE</strong>
-          <span>380 sites under surveillance • {liveIncidents} active incidents being investigated</span>
+        <div className="prevention-card" style={{ borderTopColor: TELKOM_COLORS.success }}>
+          <Activity size={24} style={{ color: TELKOM_COLORS.success }} />
+          <div className="prevention-value">{preventionMetrics.totalValue}</div>
+          <div className="prevention-label">Cable Value Protected</div>
+          <div className="prevention-subtitle">Estimated savings</div>
         </div>
-        <div className="live-stats">
-          <div className="live-stat-item">
-            <Camera size={18} />
-            <span>380 Cameras</span>
-          </div>
-          <div className="live-stat-item">
-            <Lock size={18} />
-            <span>28 Prevented Today</span>
-          </div>
+        <div className="prevention-card" style={{ borderTopColor: TELKOM_COLORS.primary }}>
+          <AlertTriangle size={24} style={{ color: TELKOM_COLORS.primary }} />
+          <div className="prevention-value">{preventionMetrics.responseTime}</div>
+          <div className="prevention-label">Avg Response Time</div>
+          <div className="prevention-subtitle">Security dispatch</div>
         </div>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="theft-metrics-grid">
-        <div className="theft-metric-card" style={{ borderTopColor: TELKOM_COLORS.danger }}>
-          <AlertTriangle size={28} style={{ color: TELKOM_COLORS.danger }} />
-          <div className="theft-metric-value">{securityMetrics.highRiskSites}</div>
-          <div className="theft-metric-label">High-Risk Sites</div>
-          <div className="theft-metric-subtitle">Require enhanced security</div>
-        </div>
-        <div className="theft-metric-card" style={{ borderTopColor: TELKOM_COLORS.warning }}>
-          <Activity size={28} style={{ color: TELKOM_COLORS.warning }} />
-          <div className="theft-metric-value">{securityMetrics.incidentsThisMonth}</div>
-          <div className="theft-metric-label">Incidents This Month</div>
-          <div className="theft-metric-subtitle trend-down">↓ 60% vs last month</div>
-        </div>
-        <div className="theft-metric-card" style={{ borderTopColor: TELKOM_COLORS.success }}>
-          <CheckCircle size={28} style={{ color: TELKOM_COLORS.success }} />
-          <div className="theft-metric-value">{securityMetrics.incidentsPrevented}</div>
-          <div className="theft-metric-label">Incidents Prevented</div>
-          <div className="theft-metric-subtitle">AI early detection</div>
-        </div>
-        <div className="theft-metric-card" style={{ borderTopColor: TELKOM_COLORS.primary }}>
-          <TrendingDown size={28} style={{ color: TELKOM_COLORS.primary }} />
-          <div className="theft-metric-value">{securityMetrics.savingsFromPrevention}</div>
-          <div className="theft-metric-label">Theft Losses Prevented</div>
-          <div className="theft-metric-subtitle">This month</div>
+        <div className="prevention-card" style={{ borderTopColor: TELKOM_COLORS.primary }}>
+          <Camera size={24} style={{ color: TELKOM_COLORS.primary }} />
+          <div className="prevention-value">{preventionMetrics.aiAccuracy}%</div>
+          <div className="prevention-label">AI Detection Accuracy</div>
+          <div className="prevention-subtitle">Prediction model</div>
         </div>
       </div>
 
-      {/* High-Risk Sites Map */}
-      <div className="theft-map-section">
-        <h3>
-          <MapPin size={24} style={{ color: TELKOM_COLORS.danger }} />
-          High-Risk Site Heatmap
-        </h3>
-        <div className="theft-map-container">
-          <svg viewBox="0 0 800 600" className="theft-svg-map">
-            {/* South Africa outline */}
-            <path
-              d="M 150 100 L 650 100 L 700 200 L 650 400 L 600 500 L 400 550 L 200 500 L 150 400 Z"
-              fill="#0a1628"
-              stroke={TELKOM_COLORS.danger}
-              strokeWidth="2"
-              opacity="0.2"
+      {/* View Mode Toggle */}
+      <div className="view-mode-toggle">
+        <button 
+          className={`toggle-btn ${viewMode === 'heatmap' ? 'active' : ''}`}
+          onClick={() => setViewMode('heatmap')}
+        >
+          <MapPin size={16} />
+          Risk Heatmap
+        </button>
+        <button 
+          className={`toggle-btn ${viewMode === 'incidents' ? 'active' : ''}`}
+          onClick={() => setViewMode('incidents')}
+        >
+          <AlertTriangle size={16} />
+          Recent Incidents
+        </button>
+      </div>
+
+      {/* Map */}
+      <div className="theft-map-container">
+        <div className="map-canvas-real">
+          <MapContainer 
+            center={[-28.5, 24.5]} 
+            zoom={6} 
+            style={{ height: '100%', width: '100%', borderRadius: '12px' }}
+            className="leaflet-map"
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
-            {/* Risk zones (circles for high-risk areas) */}
-            {highRiskSites.map(site => {
-              const x = ((site.lng + 35) / 15) * 800 - 100;
-              const y = 600 - ((site.lat + 35) / 15) * 600;
+            
+            {viewMode === 'heatmap' && highRiskSites.map((site) => {
+              const color = getRiskColor(site.risk);
+              const radius = getRiskRadius(site.risk);
               
               return (
-                <g 
-                  key={site.id} 
-                  className="risk-site-marker"
-                  onClick={() => setSelectedSite(site)}
-                >
-                  {/* Risk heatmap circle */}
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={site.riskScore / 2}
-                    fill={TELKOM_COLORS.danger}
-                    opacity="0.2"
-                    className="risk-zone"
+                <React.Fragment key={site.id}>
+                  {/* Risk coverage circle */}
+                  <Circle
+                    center={[site.lat, site.lng]}
+                    radius={radius}
+                    pathOptions={{
+                      color: color,
+                      fillColor: color,
+                      fillOpacity: 0.08 + (site.risk / 100) * 0.12,
+                      weight: 1
+                    }}
                   />
-                  
-                  {/* Pulsing alert for very high risk */}
-                  {site.riskScore >= 90 && (
-                    <circle
-                      cx={x}
-                      cy={y}
-                      r="30"
-                      fill={TELKOM_COLORS.danger}
-                      opacity="0.3"
-                      className="pulse-animation-fast"
-                    />
-                  )}
                   
                   {/* Site marker */}
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r="10"
-                    fill={site.riskScore >= 90 ? TELKOM_COLORS.danger : 
-                          site.riskScore >= 85 ? TELKOM_COLORS.warning : 
-                          TELKOM_COLORS.primary}
-                    stroke="#fff"
-                    strokeWidth="2"
-                    className="risk-dot"
-                  />
-                  
-                  {/* Camera icon */}
-                  <text
-                    x={x}
-                    y={y - 18}
-                    fill="#fff"
-                    fontSize="14"
-                    textAnchor="middle"
-                  >
-                    📹
-                  </text>
-
-                  {/* Risk score */}
-                  <text
-                    x={x}
-                    y={y + 25}
-                    fill={TELKOM_COLORS.danger}
-                    fontSize="11"
-                    textAnchor="middle"
-                    fontWeight="bold"
-                  >
-                    {site.riskScore}%
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-
-          {/* Selected Site Popup */}
-          {selectedSite && (
-            <div className="theft-site-popup" style={{ borderTopColor: TELKOM_COLORS.danger }}>
-              <button className="popup-close" onClick={() => setSelectedSite(null)}>×</button>
-              <h4>{selectedSite.name}</h4>
-              <div className="popup-id">{selectedSite.id}</div>
-              <div className="popup-risk-score" style={{ color: TELKOM_COLORS.danger }}>
-                Risk Score: {selectedSite.riskScore}%
-              </div>
-              <div className="popup-metrics-theft">
-                <div className="popup-metric">
-                  <span>Incidents:</span>
-                  <span>{selectedSite.incidentCount}</span>
-                </div>
-                <div className="popup-metric">
-                  <span>Last Incident:</span>
-                  <span>{selectedSite.lastIncident}</span>
-                </div>
-                <div className="popup-metric">
-                  <span>Camera Status:</span>
-                  <span style={{ color: selectedSite.cameraStatus === 'Active' ? TELKOM_COLORS.success : TELKOM_COLORS.danger }}>
-                    {selectedSite.cameraStatus}
-                  </span>
-                </div>
-              </div>
-              <button className="popup-details-btn-theft">Deploy Security Response</button>
-            </div>
-          )}
-        </div>
-
-        {/* Risk Legend */}
-        <div className="theft-legend">
-          <div className="legend-item-theft">
-            <div className="legend-dot-theft" style={{ background: TELKOM_COLORS.danger }}></div>
-            <span>Critical Risk (90%+) - {highRiskSites.filter(s => s.riskScore >= 90).length} sites</span>
-          </div>
-          <div className="legend-item-theft">
-            <div className="legend-dot-theft" style={{ background: TELKOM_COLORS.warning }}></div>
-            <span>High Risk (85-89%) - {highRiskSites.filter(s => s.riskScore >= 85 && s.riskScore < 90).length} sites</span>
-          </div>
-          <div className="legend-item-theft">
-            <div className="legend-dot-theft" style={{ background: TELKOM_COLORS.primary }}></div>
-            <span>Medium Risk (80-84%) - {highRiskSites.filter(s => s.riskScore >= 80 && s.riskScore < 85).length} sites</span>
-          </div>
-        </div>
-      </div>
-
-      {/* High-Risk Sites Detail Cards */}
-      <div className="high-risk-sites-section">
-        <h3>High-Risk Sites Requiring Action</h3>
-        <div className="high-risk-grid">
-          {highRiskSites.map(site => (
-            <div 
-              key={site.id} 
-              className="high-risk-card"
-              style={{ 
-                borderLeftColor: site.riskScore >= 90 ? TELKOM_COLORS.danger : TELKOM_COLORS.warning
-              }}
-            >
-              <div className="risk-card-header">
-                <div className="risk-site-info">
-                  <MapPin size={20} />
-                  <div>
-                    <div className="risk-site-id">{site.id}</div>
-                    <div className="risk-site-name">{site.name}</div>
-                  </div>
-                </div>
-                <div className="risk-score-badge-large" style={{
-                  background: site.riskScore >= 90 ? TELKOM_COLORS.danger : TELKOM_COLORS.warning
-                }}>
-                  {site.riskScore}% Risk
-                </div>
-              </div>
-
-              <div className="risk-stats-grid">
-                <div className="risk-stat">
-                  <span className="risk-stat-label">Incidents:</span>
-                  <span className="risk-stat-value">{site.incidentCount}</span>
-                </div>
-                <div className="risk-stat">
-                  <span className="risk-stat-label">Last Incident:</span>
-                  <span className="risk-stat-value">{site.lastIncident}</span>
-                </div>
-                <div className="risk-stat">
-                  <span className="risk-stat-label">Scrap Dealers:</span>
-                  <span className="risk-stat-value">{site.nearbyScrapDealers}</span>
-                </div>
-                <div className="risk-stat">
-                  <span className="risk-stat-label">Crime Rate:</span>
-                  <span className="risk-stat-value" style={{ color: TELKOM_COLORS.danger }}>
-                    {site.crimeRate}
-                  </span>
-                </div>
-              </div>
-
-              <div className="vulnerabilities-section">
-                <strong>Vulnerabilities:</strong>
-                <div className="vulnerability-tags">
-                  {site.vulnerabilities.map((vuln, idx) => (
-                    <span key={idx} className="vulnerability-tag">{vuln}</span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="security-status-row">
-                <div className="security-item">
-                  <Camera size={16} />
-                  <span className={site.cameraStatus === 'Active' ? 'status-active' : 'status-warning'}>
-                    Camera: {site.cameraStatus}
-                  </span>
-                </div>
-                <div className="security-item">
-                  <Lock size={16} />
-                  <span>{site.securityLevel}</span>
-                </div>
-              </div>
-
-              <div className="recommended-action-box-theft">
-                <strong>🛡️ Recommended Action:</strong>
-                <p>{site.recommendedAction}</p>
-              </div>
-
-              <div className="potential-loss">
-                <span>Potential Loss if Incident Occurs:</span>
-                <strong style={{ color: TELKOM_COLORS.danger }}>{site.estimatedLoss}</strong>
-              </div>
-
-              <div className="risk-card-actions-theft">
-                <button className="action-btn-theft primary">Deploy Response Team</button>
-                <button className="action-btn-theft secondary">Update Security</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recent Incidents */}
-      <div className="recent-incidents-section">
-        <h3>
-          <Activity size={24} style={{ color: TELKOM_COLORS.warning }} />
-          Recent Security Incidents
-        </h3>
-        <div className="incidents-table">
-          <div className="incidents-table-header">
-            <div className="incidents-cell">Incident ID</div>
-            <div className="incidents-cell">Site</div>
-            <div className="incidents-cell">Type</div>
-            <div className="incidents-cell">Time</div>
-            <div className="incidents-cell">Status</div>
-            <div className="incidents-cell">Response Time</div>
-            <div className="incidents-cell">Outcome</div>
-          </div>
-          {recentIncidents.map(incident => (
-            <div key={incident.id} className="incidents-table-row">
-              <div className="incidents-cell">{incident.id}</div>
-              <div className="incidents-cell">
-                <strong>{incident.site}</strong>
-                <br />
-                <span className="site-name-small">{incident.siteName}</span>
-              </div>
-              <div className="incidents-cell">{incident.type}</div>
-              <div className="incidents-cell">{incident.timestamp}</div>
-              <div className="incidents-cell">
-                <span className={`status-badge-incident ${incident.status.toLowerCase()}`}>
-                  {incident.status}
-                </span>
-              </div>
-              <div className="incidents-cell">{incident.responseTime}</div>
-              <div className="incidents-cell">
-                <span style={{ color: incident.outcome === 'Success' ? TELKOM_COLORS.success : TELKOM_COLORS.warning }}>
-                  {incident.outcome}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Analytics Charts */}
-      <div className="theft-analytics-grid">
-        {/* Prevention Trend */}
-        <div className="chart-card-theft">
-          <h4>Theft Prevention Effectiveness</h4>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={preventionTrendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-              <XAxis dataKey="month" stroke="#fff" />
-              <YAxis stroke="#fff" />
-              <Tooltip 
-                contentStyle={{ 
-                  background: 'rgba(15, 20, 25, 0.95)', 
-                  border: `1px solid ${TELKOM_COLORS.primary}`,
-                  borderRadius: '8px'
-                }} 
-              />
-              <Bar dataKey="prevented" fill={TELKOM_COLORS.success} name="Prevented" radius={[8, 8, 0, 0]} />
-              <Bar dataKey="occurred" fill={TELKOM_COLORS.danger} name="Occurred" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-          <div className="chart-footer-note">
-            Prevention Rate: <strong style={{ color: TELKOM_COLORS.success }}>70%</strong> • 
-            Target: 60%
-          </div>
-        </div>
-
-        {/* Risk Factors */}
-        <div className="chart-card-theft">
-          <h4>AI Risk Assessment Factors</h4>
-          <div className="risk-factors-list">
-            {riskFactorsData.map((factor, idx) => (
-              <div key={idx} className="risk-factor-item">
-                <div className="risk-factor-label">{factor.factor}</div>
-                <div className="risk-factor-bar-container">
-                  <div 
-                    className="risk-factor-bar"
-                    style={{ 
-                      width: `${factor.weight}%`,
-                      background: TELKOM_COLORS.danger
+                  <Marker 
+                    position={[site.lat, site.lng]}
+                    icon={createRiskIcon(site.risk)}
+                    eventHandlers={{
+                      click: () => setSelectedSite(site)
                     }}
                   >
-                    <span className="risk-factor-value">{factor.weight}%</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="chart-footer-note">
-            AI analyzes 50+ data points for each site risk assessment
-          </div>
-        </div>
-      </div>
+                    <Popup>
+                      <div className="marker-popup">
+                        <div className="popup-header-mini" style={{ borderBottomColor: color }}>
+                          <Shield size={16} style={{ color }} />
+                          <strong>{site.name}</strong>
+                        </div>
+                        <div className="popup-content-mini">
+                          <div><strong>Risk Level:</strong> <span style={{ color }}>{site.risk}%</span></div>
+                          <div><strong>Cable Length:</strong> {site.cableLength}</div>
+                          <div><strong>Value:</strong> {site.estimatedValue}</div>
+                          <div><strong>Last Incident:</strong> {site.lastIncident}</div>
+                          <div><strong>Security:</strong> {site.securityLevel}</div>
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+                </React.Fragment>
+              );
+            })}
 
-      {/* Cost Savings Summary */}
-      <div className="cost-savings-theft">
-        <h3>💰 Financial Impact - This Month</h3>
-        <div className="savings-grid-theft">
-          <div className="savings-card-theft">
-            <div className="savings-label-theft">Incidents Prevented:</div>
-            <div className="savings-value-theft" style={{ color: TELKOM_COLORS.success }}>28</div>
-          </div>
-          <div className="savings-card-theft">
-            <div className="savings-label-theft">Replacement Costs Saved:</div>
-            <div className="savings-value-theft" style={{ color: TELKOM_COLORS.success }}>R6.8M</div>
-          </div>
-          <div className="savings-card-theft">
-            <div className="savings-label-theft">Downtime Avoided:</div>
-            <div className="savings-value-theft" style={{ color: TELKOM_COLORS.success }}>R1.6M</div>
-          </div>
-          <div className="savings-card-theft highlight">
-            <div className="savings-label-theft">Total Savings:</div>
-            <div className="savings-value-theft" style={{ color: TELKOM_COLORS.success, fontSize: '32px' }}>
-              R8.4M
+            {viewMode === 'incidents' && recentIncidents.map((incident) => {
+              const color = incident.status === 'prevented' ? TELKOM_COLORS.success : TELKOM_COLORS.danger;
+              
+              return (
+                <Marker 
+                  key={incident.id}
+                  position={[incident.lat, incident.lng]}
+                  icon={createIncidentIcon(incident.status)}
+                  eventHandlers={{
+                    click: () => setSelectedIncident(incident)
+                  }}
+                >
+                  <Popup>
+                    <div className="marker-popup">
+                      <div className="popup-header-mini" style={{ borderBottomColor: color }}>
+                        <AlertTriangle size={16} style={{ color }} />
+                        <strong>{incident.type}</strong>
+                      </div>
+                      <div className="popup-content-mini">
+                        <div><strong>ID:</strong> {incident.id}</div>
+                        <div><strong>Time:</strong> {incident.date}</div>
+                        <div><strong>Status:</strong> <span style={{ color }}>{incident.status.toUpperCase()}</span></div>
+                        <div><strong>Response:</strong> {incident.response}</div>
+                        <div><strong>Value:</strong> {incident.cableValue}</div>
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MapContainer>
+        </div>
+
+        {/* Legend */}
+        <div className="map-legend-box">
+          <div className="legend-title">Risk Levels</div>
+          <div className="legend-items">
+            <div className="legend-item-box">
+              <div className="legend-circle" style={{ background: TELKOM_COLORS.danger }}></div>
+              <span>Critical (85%+) - {highRiskSites.filter(s => s.risk >= 85).length} sites</span>
+            </div>
+            <div className="legend-item-box">
+              <div className="legend-circle" style={{ background: TELKOM_COLORS.warning }}></div>
+              <span>High (75-84%) - {highRiskSites.filter(s => s.risk >= 75 && s.risk < 85).length} sites</span>
+            </div>
+            <div className="legend-item-box">
+              <div className="legend-circle" style={{ background: TELKOM_COLORS.primary }}></div>
+              <span>Medium (60-74%) - {highRiskSites.filter(s => s.risk >= 60 && s.risk < 75).length} sites</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* High Risk Sites List */}
+      <div className="high-risk-sites-section">
+        <h3>
+          <AlertTriangle size={24} style={{ color: TELKOM_COLORS.danger }} />
+          High-Risk Sites Requiring Immediate Attention
+        </h3>
+        <div className="risk-sites-grid">
+          {highRiskSites.filter(s => s.risk >= 75).map((site) => (
+            <div 
+              key={site.id} 
+              className="risk-site-card"
+              style={{ borderLeftColor: getRiskColor(site.risk) }}
+              onClick={() => setSelectedSite(site)}
+            >
+              <div className="risk-card-header">
+                <div className="risk-site-name">
+                  <MapPin size={18} />
+                  <span>{site.name}</span>
+                </div>
+                <div className="risk-score" style={{ background: getRiskColor(site.risk) }}>
+                  {site.risk}%
+                </div>
+              </div>
+              <div className="risk-card-body">
+                <div className="risk-detail-row">
+                  <span>Cable Value:</span>
+                  <strong>{site.estimatedValue}</strong>
+                </div>
+                <div className="risk-detail-row">
+                  <span>Last Incident:</span>
+                  <strong>{site.lastIncident}</strong>
+                </div>
+                <div className="risk-detail-row">
+                  <span>Scrap Dealers Nearby:</span>
+                  <strong>{site.scrapDealersNearby}</strong>
+                </div>
+                <div className="ai-recommendation-box">
+                  <Lock size={14} />
+                  <span>{site.aiRecommendation}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Detail Modal */}
+      {selectedSite && (
+        <div className="site-detail-overlay" onClick={() => setSelectedSite(null)}>
+          <div className="site-detail-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header-large" style={{ borderBottomColor: getRiskColor(selectedSite.risk) }}>
+              <div>
+                <h3>{selectedSite.name}</h3>
+                <p>{selectedSite.id} • Risk Level: {selectedSite.risk}%</p>
+              </div>
+              <button onClick={() => setSelectedSite(null)}>×</button>
+            </div>
+            <div className="modal-body-large">
+              <div className="detail-grid-large">
+                <div className="detail-card">
+                  <div className="detail-label">Risk Score</div>
+                  <div className="detail-value" style={{ color: getRiskColor(selectedSite.risk) }}>
+                    {selectedSite.risk}%
+                  </div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Cable Value</div>
+                  <div className="detail-value" style={{ fontSize: '20px' }}>{selectedSite.estimatedValue}</div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Cable Length</div>
+                  <div className="detail-value" style={{ fontSize: '20px' }}>{selectedSite.cableLength}</div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Last Incident</div>
+                  <div className="detail-value" style={{ fontSize: '16px' }}>{selectedSite.lastIncident}</div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Scrap Dealers</div>
+                  <div className="detail-value">{selectedSite.scrapDealersNearby}</div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Crime Statistics</div>
+                  <div className="detail-value" style={{ fontSize: '18px' }}>{selectedSite.crimeStat}</div>
+                </div>
+                <div className="detail-card">
+                  <div className="detail-label">Security Level</div>
+                  <div className="detail-value" style={{ fontSize: '18px' }}>{selectedSite.securityLevel}</div>
+                </div>
+                <div className="detail-card" style={{ 
+                  gridColumn: 'span 2',
+                  background: 'rgba(0, 193, 222, 0.1)',
+                  borderColor: 'rgba(0, 193, 222, 0.3)'
+                }}>
+                  <div className="detail-label" style={{ color: TELKOM_COLORS.primary }}>AI Recommendation</div>
+                  <div className="detail-value" style={{ fontSize: '14px', lineHeight: '1.6' }}>
+                    💡 {selectedSite.aiRecommendation}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

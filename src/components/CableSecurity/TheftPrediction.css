@@ -1,4 +1,4 @@
-.theft-dashboard {
+.theft-prediction-dashboard {
   padding: 24px;
 }
 
@@ -24,72 +24,15 @@
   color: #8b92a7;
 }
 
-.live-alert-banner {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px 24px;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
-  border: 2px solid #ef4444;
-  border-radius: 12px;
-  margin-bottom: 30px;
-}
-
-.live-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: rgba(239, 68, 68, 0.2);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.pulsing-red {
-  animation: pulse-red-strong 1.5s ease-in-out infinite;
-}
-
-.live-alert-content {
-  flex: 1;
-}
-
-.live-alert-content strong {
-  display: block;
-  font-size: 16px;
-  color: #ef4444;
-  margin-bottom: 4px;
-}
-
-.live-alert-content span {
-  font-size: 14px;
-  color: #d1d5db;
-}
-
-.live-stats {
-  display: flex;
-  gap: 20px;
-}
-
-.live-stat-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  font-size: 13px;
-  color: #8b92a7;
-}
-
-.theft-metrics-grid {
+/* Prevention Metrics */
+.prevention-metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
 
-.theft-metric-card {
+.prevention-card {
   background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
   border-radius: 12px;
   padding: 24px;
@@ -101,220 +44,184 @@
   transition: all 0.3s ease;
 }
 
-.theft-metric-card:hover {
+.prevention-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.theft-metric-value {
+.prevention-value {
   font-size: 36px;
   font-weight: 700;
-  margin: 12px 0 8px 0;
   color: #fff;
+  margin: 12px 0 8px 0;
 }
 
-.theft-metric-label {
+.prevention-label {
   font-size: 14px;
   font-weight: 600;
   color: #fff;
   margin-bottom: 4px;
 }
 
-.theft-metric-subtitle {
+.prevention-subtitle {
   font-size: 13px;
   color: #8b92a7;
 }
 
-.theft-metric-subtitle.trend-down {
-  color: #10b981;
+/* View Mode Toggle */
+.view-mode-toggle {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  width: fit-content;
 }
 
-.theft-map-section {
-  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #8b92a7;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #00C1DE, #0077C8);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Map Container */
+.theft-map-container {
+  position: relative;
   margin-bottom: 30px;
 }
 
-.theft-map-section h3 {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.theft-map-container {
-  background: #0a0e14;
+.theft-map-container .map-canvas-real {
+  height: 900px;
+  min-height: 900px;
   border-radius: 12px;
-  padding: 20px;
-  min-height: 500px;
-  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.theft-svg-map {
-  width: 100%;
-  height: 100%;
-}
-
-.risk-site-marker {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.risk-site-marker:hover .risk-dot {
-  r: 16;
-  filter: drop-shadow(0 0 15px currentColor);
-}
-
-.risk-zone {
-  transition: all 0.3s ease;
-}
-
-.risk-site-marker:hover .risk-zone {
-  opacity: 0.4;
-}
-
-.risk-dot {
-  transition: all 0.3s ease;
-}
-
-.theft-site-popup {
+/* Map Legend Box */
+.map-legend-box {
   position: absolute;
-  top: 50%;
-  right: 30px;
-  transform: translateY(-50%);
-  background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
   border-radius: 12px;
-  padding: 20px;
-  width: 280px;
-  border-top: 4px solid;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-  animation: slideInRight 0.3s ease;
+  padding: 16px 20px;
+  border: 2px solid rgba(0, 193, 222, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  min-width: 250px;
 }
 
-.popup-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  color: #8b92a7;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.popup-close:hover {
-  color: #ef4444;
-}
-
-.theft-site-popup h4 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: #fff;
-}
-
-.popup-id {
-  font-size: 13px;
-  color: #8b92a7;
-  margin-bottom: 12px;
-}
-
-.popup-risk-score {
-  font-size: 16px;
+.legend-title {
+  font-size: 14px;
   font-weight: 700;
-  margin-bottom: 16px;
+  color: #fff;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.popup-metrics-theft {
+.legend-items {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 10px;
 }
 
-.popup-metric {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-}
-
-.popup-metric span:first-child {
-  color: #8b92a7;
-}
-
-.popup-metric span:last-child {
-  color: #fff;
-  font-weight: 600;
-}
-
-.popup-details-btn-theft {
-  width: 100%;
-  padding: 10px;
-  background: #ef4444;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.popup-details-btn-theft:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
-
-.theft-legend {
-  display: flex;
-  gap: 24px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
-.legend-item-theft {
+.legend-item-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 13px;
-  color: #8b92a7;
+  color: #d1d5db;
 }
 
-.legend-dot-theft {
-  width: 12px;
-  height: 12px;
+.legend-circle {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  border: 2px solid #fff;
+  flex-shrink: 0;
 }
 
+/* Risk Pulse Animation - More subtle */
+@keyframes risk-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+/* Custom marker styling */
+.custom-risk-marker,
+.custom-incident-marker {
+  transition: transform 0.2s ease;
+}
+
+.custom-risk-marker:hover,
+.custom-incident-marker:hover {
+  transform: scale(1.3) !important;
+  z-index: 1000 !important;
+}
+
+/* High Risk Sites Section */
 .high-risk-sites-section {
   margin-bottom: 30px;
 }
 
 .high-risk-sites-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 20px;
-  margin-bottom: 20px;
   color: #fff;
+  margin-bottom: 24px;
 }
 
-.high-risk-grid {
+.risk-sites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   gap: 24px;
 }
 
-.high-risk-card {
+.risk-site-card {
   background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   border-left: 4px solid;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.high-risk-card:hover {
-  transform: translateY(-5px);
+.risk-site-card:hover {
+  transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -325,398 +232,285 @@
   margin-bottom: 16px;
 }
 
-.risk-site-info {
+.risk-site-name {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.risk-site-id {
-  font-size: 13px;
-  color: #8b92a7;
-  font-weight: 600;
-}
-
-.risk-site-name {
-  font-size: 15px;
+  gap: 8px;
+  font-size: 16px;
   font-weight: 700;
   color: #fff;
 }
 
-.risk-score-badge-large {
-  padding: 8px 16px;
+.risk-score {
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 700;
   color: #fff;
 }
 
-.risk-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.risk-stat {
+.risk-card-body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
 }
 
-.risk-stat-label {
-  font-size: 12px;
-  color: #8b92a7;
-}
-
-.risk-stat-value {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.vulnerabilities-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 16px;
-}
-
-.vulnerabilities-section strong {
-  display: block;
-  font-size: 12px;
-  color: #8b92a7;
-  margin-bottom: 8px;
-}
-
-.vulnerability-tags {
+.risk-detail-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.vulnerability-tag {
-  padding: 4px 10px;
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.security-status-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.security-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  justify-content: space-between;
   font-size: 13px;
   color: #8b92a7;
 }
 
-.status-active {
-  color: #10b981 !important;
+.risk-detail-row strong {
+  color: #fff;
 }
 
-.status-warning {
-  color: #f59e0b !important;
-}
-
-.recommended-action-box-theft {
+.ai-recommendation-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   padding: 12px;
   background: rgba(0, 193, 222, 0.1);
   border-radius: 8px;
-  border-left: 3px solid #00C1DE;
-  margin-bottom: 16px;
-}
-
-.recommended-action-box-theft strong {
-  display: block;
+  border: 1px solid rgba(0, 193, 222, 0.3);
+  margin-top: 8px;
   font-size: 12px;
-  margin-bottom: 6px;
-}
-
-.recommended-action-box-theft p {
-  margin: 0;
-  font-size: 13px;
   color: #d1d5db;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-.potential-loss {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  background: rgba(239, 68, 68, 0.1);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-size: 13px;
-}
-
-.risk-card-actions-theft {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn-theft {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.action-btn-theft.primary {
-  background: #ef4444;
-  color: #fff;
-}
-
-.action-btn-theft.primary:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
-
-.action-btn-theft.secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.action-btn-theft.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.recent-incidents-section {
-  margin-bottom: 30px;
-}
-
-.recent-incidents-section h3 {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.incidents-table {
-  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.incidents-table-header {
-  display: grid;
-  grid-template-columns: 120px 150px 150px 120px 100px 120px 1fr;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  font-size: 12px;
-  font-weight: 700;
-  color: #8b92a7;
-  text-transform: uppercase;
-}
-
-.incidents-table-row {
-  display: grid;
-  grid-template-columns: 120px 150px 150px 120px 100px 120px 1fr;
-  gap: 16px;
-  padding: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
-}
-
-.incidents-table-row:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.incidents-cell {
-  font-size: 13px;
-  color: #d1d5db;
-  display: flex;
-  align-items: center;
-}
-
-.site-name-small {
-  font-size: 11px;
-  color: #8b92a7;
-}
-
-.status-badge-incident {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-
-.status-badge-incident.prevented {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-}
-
-.status-badge-incident.resolved {
-  background: rgba(0, 193, 222, 0.2);
-  color: #00C1DE;
-}
-
-.theft-analytics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 24px;
-  margin-bottom: 30px;
-}
-
-.chart-card-theft {
-  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.chart-card-theft h4 {
-  margin: 0 0 20px 0;
-  font-size: 16px;
-  color: #fff;
-}
-
-.risk-factors-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.risk-factor-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.risk-factor-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.risk-factor-bar-container {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.risk-factor-bar {
-  height: 100%;
+/* Modal styles from Maps.css */
+.site-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
-  transition: width 0.5s ease;
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease-out;
 }
 
-.risk-factor-value {
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-.cost-savings-theft {
+.site-detail-modal {
   background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-  border-radius: 12px;
-  padding: 24px;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 2px solid rgba(0, 193, 222, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  animation: modalSlideIn 0.3s ease-out;
 }
 
-.cost-savings-theft h3 {
-  font-size: 20px;
-  margin-bottom: 20px;
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header-large {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  border-bottom: 2px solid;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  z-index: 10;
+}
+
+.modal-header-large h3 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
   color: #fff;
 }
 
-.savings-grid-theft {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+.modal-header-large p {
+  margin: 0;
+  font-size: 14px;
+  color: #8b92a7;
 }
 
-.savings-card-theft {
-  background: rgba(255, 255, 255, 0.03);
+.modal-header-large button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
   border-radius: 8px;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.modal-header-large button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal-body-large {
+  padding: 24px;
+}
+
+.detail-grid-large {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.detail-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
   padding: 20px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
-.savings-card-theft.highlight {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
+.detail-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 193, 222, 0.2);
 }
 
-.savings-label-theft {
-  font-size: 13px;
+.detail-label {
+  font-size: 12px;
   color: #8b92a7;
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
-.savings-value-theft {
+.detail-value {
   font-size: 28px;
   font-weight: 700;
+  color: #fff;
+  line-height: 1;
 }
 
-@keyframes pulse-red-strong {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  50% {
-    opacity: 0.8;
-    box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
-  }
+/* Popup styles */
+.marker-popup {
+  padding: 0;
+  min-width: 250px;
 }
 
-@media (max-width: 1200px) {
-  .incidents-table-header,
-  .incidents-table-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .incidents-cell {
-    justify-content: space-between;
-  }
-
-  .incidents-cell::before {
-    content: attr(data-label);
-    font-weight: 700;
-    color: #8b92a7;
-    font-size: 11px;
-  }
+.popup-header-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 2px solid;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.2);
 }
 
+.popup-content-mini {
+  padding: 16px;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.popup-content-mini>div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popup-content-mini>div:last-child {
+  border-bottom: none;
+}
+
+.popup-content-mini strong {
+  color: #8b92a7;
+  font-weight: 600;
+}
+
+/* Scrollbar for modal */
+.site-detail-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.site-detail-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.site-detail-modal::-webkit-scrollbar-thumb {
+  background: rgba(0, 193, 222, 0.5);
+  border-radius: 10px;
+}
+
+.site-detail-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 193, 222, 0.7);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .high-risk-grid,
-  .theft-analytics-grid,
-  .savings-grid-theft {
+  .prevention-metrics-grid {
     grid-template-columns: 1fr;
   }
 
-  .live-stats {
-    flex-direction: column;
-    align-items: flex-start;
+  .theft-map-container .map-canvas-real {
+    height: 600px !important;
+    min-height: 600px !important;
   }
 
-  .theft-site-popup {
-    right: 10px;
-    left: 10px;
-    width: auto;
+  .map-legend-box {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 16px;
+  }
+
+  .risk-sites-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .view-mode-toggle {
+    width: 100%;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .detail-grid-large {
+    grid-template-columns: 1fr;
+  }
+
+  .site-detail-modal {
+    width: 95%;
   }
 }
