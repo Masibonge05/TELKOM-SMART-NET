@@ -1,0 +1,254 @@
+.metric-drilldown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+.metric-drilldown-modal {
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 193, 222, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+.drilldown-header {
+  padding: 24px;
+  border-bottom: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 193, 222, 0.05);
+}
+
+.drilldown-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.drilldown-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drilldown-header h2 {
+  font-size: 24px;
+  margin: 0;
+  color: #fff;
+}
+
+.drilldown-header p {
+  font-size: 14px;
+  color: #8b92a7;
+  margin: 4px 0 0 0;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.drilldown-body {
+  padding: 24px;
+}
+
+.drilldown-current {
+  margin-bottom: 24px;
+}
+
+.current-value-card {
+  background: rgba(0, 193, 222, 0.05);
+  border-left: 4px solid;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.current-label {
+  font-size: 14px;
+  color: #8b92a7;
+  margin-bottom: 8px;
+}
+
+.current-value {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.trend-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.trend-indicator.up {
+  color: #10b981;
+}
+
+.trend-indicator.down {
+  color: #ef4444;
+}
+
+.drilldown-chart {
+  margin-bottom: 24px;
+}
+
+.drilldown-chart h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.drilldown-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.detail-metric-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-metric-label {
+  font-size: 13px;
+  color: #8b92a7;
+  margin-bottom: 8px;
+}
+
+.detail-metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00C1DE;
+}
+
+.drilldown-insights {
+  margin-bottom: 24px;
+}
+
+.drilldown-insights h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.insight-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border-left: 3px solid #f59e0b;
+  margin-bottom: 12px;
+}
+
+.insight-card.success {
+  border-left-color: #10b981;
+}
+
+.insight-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+.drilldown-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn.primary {
+  color: #fff;
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 193, 222, 0.4);
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

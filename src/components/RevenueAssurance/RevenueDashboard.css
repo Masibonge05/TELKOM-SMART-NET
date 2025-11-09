@@ -1,0 +1,578 @@
+.revenue-dashboard {
+  padding: 24px;
+}
+
+/* Header */
+.revenue-header {
+  margin-bottom: 30px;
+}
+
+.revenue-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.revenue-title h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #fff;
+}
+
+.revenue-title p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #8b92a7;
+}
+
+/* Metrics Grid */
+.revenue-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.revenue-metric-card {
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  border-radius: 12px;
+  padding: 24px;
+  border-top: 4px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.revenue-metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.revenue-metric-value {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 12px 0 8px 0;
+  color: #fff;
+}
+
+.revenue-metric-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.revenue-metric-subtitle {
+  font-size: 13px;
+  color: #8b92a7;
+}
+
+/* Leaks Section */
+.leaks-section {
+  margin-bottom: 30px;
+}
+
+.leaks-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.leaks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+}
+
+/* Leak Card */
+.leak-card {
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  border-radius: 12px;
+  padding: 24px;
+  border-left: 4px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.leak-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.leak-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.leak-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.leak-id {
+  font-size: 13px;
+  color: #8b92a7;
+  font-weight: 600;
+}
+
+.leak-type {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.leak-customer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #8b92a7;
+  margin-bottom: 16px;
+}
+
+/* Leak Metrics */
+.leak-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.leak-metric-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.leak-metric-label {
+  color: #8b92a7;
+}
+
+.leak-metric-value {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Confidence Bar */
+.leak-confidence {
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #8b92a7;
+}
+
+.confidence-bar {
+  height: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  position: relative;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease;
+}
+
+.confidence-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+/* Leak Footer */
+.leak-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leak-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.leak-date {
+  font-size: 12px;
+  color: #8b92a7;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 2px solid rgba(0, 193, 222, 0.3);
+}
+
+.leak-modal {
+  max-width: 900px;
+}
+
+.modal-header {
+  padding: 24px;
+  border-bottom: 2px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  z-index: 10;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #fff;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  color: #8b92a7;
+  margin-top: 4px;
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+/* Leak Section */
+.leak-section {
+  margin-bottom: 24px;
+}
+
+.section-title-small {
+  font-size: 16px;
+  color: #fff;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.leak-detail-text {
+  font-size: 14px;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Financial Impact */
+.leak-financial-impact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.financial-item-large {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.financial-item-large span {
+  font-size: 13px;
+  color: #8b92a7;
+}
+
+.financial-item-large strong {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Evidence List */
+.evidence-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+/* Assignment Info */
+.assignment-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+/* Resolved Section */
+.resolved-section {
+  padding: 20px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.resolution-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #8b92a7;
+}
+
+/* Action Buttons */
+.leak-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #00C1DE 0%, #0077C8 100%);
+  color: #fff;
+}
+
+.action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 193, 222, 0.4);
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00C1DE;
+}
+
+/* Analytics Charts */
+.revenue-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.chart-card-revenue {
+  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(0, 193, 222, 0.2);
+  transition: all 0.3s ease;
+}
+
+.chart-card-revenue:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 193, 222, 0.15);
+}
+
+.chart-card-revenue h4 {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.chart-footer-note {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #8b92a7;
+}
+
+/* Accuracy Card */
+.accuracy-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.accuracy-stats {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.accuracy-stat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.accuracy-label {
+  font-size: 14px;
+  color: #8b92a7;
+}
+
+.accuracy-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Impact Summary */
+.impact-summary {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(0, 193, 222, 0.05) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.impact-stat-item {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.impact-stat-label {
+  font-size: 13px;
+  color: #8b92a7;
+  margin-bottom: 8px;
+}
+
+.impact-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .revenue-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .revenue-dashboard {
+    padding: 16px;
+  }
+
+  .revenue-metrics-grid,
+  .leaks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leak-financial-impact,
+  .impact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leak-actions {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .revenue-title h2 {
+    font-size: 22px;
+  }
+
+  .revenue-metric-value {
+    font-size: 28px;
+  }
+
+  .leak-financial-impact strong {
+    font-size: 20px;
+  }
+}
